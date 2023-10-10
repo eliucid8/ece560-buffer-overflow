@@ -11,7 +11,7 @@ To do the exploit as-is:
 * **Get set up**: Download/clone, extract, and test the example exploit kit.
   * The Makefile is set up to build the vulnerable program with W^X disabled.
   * Read through the vulnerable program “vuln1.c” and the attack script “attack.asm” closely. 
-  * [Watch this walkthrough video I recorded](https://youtu.be/q4iGAocXo0o). 
+  * **[Watch this walkthrough video I recorded](https://youtu.be/q4iGAocXo0o)**. 
     * NOTE: This video was recorded for an earlier version of the demo, so there are slight differences, in particular, it claims that we need to avoid null bytes in the attack buffer, this is actually not true for a gets() exploit. It also shows a global-based overflow, while the current version is stack-based.   
 * **Run demo**: ``./demo``
   * The demo script will run the program first normally, then with the attack buffer. 
