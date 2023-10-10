@@ -1,92 +1,36 @@
 # exploit-starter-kit
 
+## Overview
 
+This is a minimal example of a buffer overflow exploit used as part of Duke University's ECE 560 (Intro to Computer Security). It should work on any modern Linux.
+ 
+To use, you'll need to [disable ASLR](http://askubuntu.com/questions/318315/how-can-i-temporarily-disable-aslr-address-space-layout-randomization). Also, [this post explains how to turn off W^X](https://www.m0skit0.org/2012/11/disabling-aslr-and-nx-in-linux.html) (also known as NX support) at compile time (done by default by the Makefile in the starter kit linked below). 
+ 
+To do the exploit as-is:
+* **Prepare environment**: In your Linux environment, install nasm (“sudo apt install nasm”).
+* **Get set up**: Download/clone, extract, and test the example exploit kit.
+  * The Makefile is set up to build the vulnerable program with W^X disabled.
+  * Read through the vulnerable program “vuln1.c” and the attack script “attack.asm” closely. 
+  * [Watch this walkthrough video I recorded](https://youtu.be/q4iGAocXo0o). 
+    * NOTE: This video was recorded for an earlier version of the demo, so there are slight differences, in particular, it claims that we need to avoid null bytes in the attack buffer, this is actually not true for a gets() exploit. It also shows a global-based overflow, while the current version is stack-based.   
+* **Run demo**: ``./demo``
+  * The demo script will run the program first normally, then with the attack buffer. 
+  * The included attack will make the program skip saying “Bye!” and exit with status code 5 instead of the usual 0.  Recall that the exit status of a program can be checked by running “echo $?” after the program exits. The demo script should show this.
+  * Assuming your VM’s memory map looks like mine, you may be able to run the attack straight away by executing the “demo” script.  If it doesn’t work (e.g., segfault), you may need to update the memory location constants ``buffer_ptr`` and ``func_ptr`` in the attack script, re-build, and try again. The vulnerable program helpfully announces these pointer locations when run.
 
-## Getting started
+At this point, you can develop fancier attack buffers to do more stuff. If you're starting with this kit for an ECE 560 homework, refer back to the assignment for what to do next. 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Resources
+Here’s some random links and tips to help you:
+* [GDB quick reference card](http://users.ece.utexas.edu/~adnan/gdb-refcard.pdf).
+* [Syscall numbers](https://filippo.io/linux-syscall-table/). Also, [alternate source with register indicators](https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/).
+* Intel x86 assembly reference:
+  * [The giant Intel big book: the authoritative source](http://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf).
+  * [The felixcloutier x86 instruction reference](https://www.felixcloutier.com/x86/).
+  * [NASM manual](http://www.nasm.us/doc/), including [instruction list](http://www.nasm.us/doc/nasmdocb.html).
+  * Low-level conversions between hex bytes and CPU instructions: 
+[Numeric order](http://ref.x86asm.net/coder64.html), [mnemonic order](http://ref.x86asm.net/coder64-abc.html).
+* You can use “``ndisasm -b64 <file>``” to do a raw disassembly of your attack buffer, with output in Intel (NASM) syntax.
+* You can use “``hd <file>``” to get a hexdump of it, which is useful when looking for nulls or whitespace bytes that snuck into your attack buffer.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.oit.duke.edu/tkb13/exploit-starter-kit.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.oit.duke.edu/tkb13/exploit-starter-kit/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Have fun!
