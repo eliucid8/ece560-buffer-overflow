@@ -14,8 +14,8 @@ BITS 64 ; We're writing 64-bit x86 code
 ; Some constants representing where the buffer and the function pointer are in memory -- these can be changed as needed
 
 ; if running in gdb
-; %define buffer_ptr 0x7fffffffdf70  
-; %define func_ptr   0x7fffffffe070 
+; %define buffer_ptr 0x7fffffffdf30  
+; %define func_ptr   0x7fffffffe030 
 ; %define newline_char 0x555555556077 ; this is from the first line the program prints.
 
 %define buffer_ptr 0x7fffffffdff0  ; this attack will be written to this buffer location
