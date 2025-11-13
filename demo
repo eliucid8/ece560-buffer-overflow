@@ -9,7 +9,12 @@ echo
 echo
 
 echo -e "\e[31;7m== ATTACK RUN ==\e[m"
-./vuln1 < attack.bin
+if [[ -n $1 ]]; then
+    bin=$1
+else 
+    bin="attack.bin"
+fi
+./vuln1 < "$bin"
 echo -e "\n\e[33mThe exit code was $?\e[m"
 
 echo

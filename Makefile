@@ -1,7 +1,7 @@
 VFLAGS=-fno-stack-protector -z execstack
 # ^ turn of W^X protections
 
-BIN=vuln1 attack.bin
+BIN=vuln1 attack.bin multiline.bin
 # ^ binaries to build. note:
 #   because this Makefile can convert *any* asm file to a corresponding bin file,
 #   you can just add additional bin entries here and build them from asm
