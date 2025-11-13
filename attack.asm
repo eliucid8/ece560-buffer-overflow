@@ -21,10 +21,6 @@ org buffer_ptr ; The org directive sets where the assembler *assumes* this code 
 ; == BEGIN BUFFER; MACHINE CODE GOES HERE ==
 
 ; order of operands: rax	rdi 	rsi 	rdx 	r10 	r8 	r9 	rax
-; mov al,-10
-; neg al
-; mov [newline], al
-
 ; print the message.
 
 ; set rax to syscall number 1 for `write`
@@ -56,10 +52,6 @@ syscall
 ; here's how we store a message in the attack buffer and note its length -- this attack doesn't make use of the message though
 ; note that there is no null terminator automatically included in NASM strings
 message db "**_You_got_hax0red!_**"
-; nl1 db 0xE2
-; nl2 db 0x80
-; nl3 db 0xA8
-; message2 db "You_done_goofed!!"
 ; you can use the macro message_len to get the length of the message in bytes
 message_len equ $-message
 
